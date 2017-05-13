@@ -10,8 +10,8 @@
 
 #include "myftp.h"
 
-void	put_error(const char *error)
+void	put_error()
 {
-  perror(error);
+  fprintf(stderr, "Error: %s\n", strerror(errno));
   exit(EXIT_FAILURE);
 }

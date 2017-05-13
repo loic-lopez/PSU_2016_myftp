@@ -43,6 +43,6 @@ typedef	struct			s_ftp_server
 
 void	launch_server(int port, char const *home_user);
 void	init_server(t_ftp_server *ftp_server, int port);
-void	put_error(const char *msg);
+void	put_error();
 
 #endif /* PSU_2016_MYFTP_MYFTP_H */
