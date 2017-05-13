@@ -79,18 +79,10 @@ void	other_operations(t_ftp_server *ftp_server)
       ftp_server->sd = ftp_server->client_socket[i];
       if (FD_ISSET( ftp_server->sd , &ftp_server->readfds))
 	{
-	  if ((ftp_server->valread = read(ftp_server->sd , ftp_server->buffer, 1024)) == 0)
-	    {
-	      getpeername(ftp_server->sd , (struct sockaddr*)&ftp_server->address , (socklen_t*)&ftp_server->addrlen);
-	      printf("Host disconnected , ip %s , port %d \n" , inet_ntoa(ftp_server->address.sin_addr) , ntohs(ftp_server->address.sin_port));
-	      close(ftp_server->sd);
-	      ftp_server->client_socket[i] = 0;
-	    }
-	  else
-	    {
-	      ftp_server->buffer[ftp_server->valread] = '\0';
-	      fprintf(stderr, ftp_server->buffer);
-	    }
+	  ftp_server->valread = read(ftp_server->sd ,
+				     ftp_server->buffer, 1024);
+	  ftp_server->buffer[ftp_server->valread] = '\0';
+	  execute_server_command(ftp_server);
 	}
     }
 }

@@ -26,7 +26,8 @@ CFLAGS	+=	-I./include/
 
 SRC	=	src/main.c	\
 		src/server.c	\
-		src/utils.c
+		src/utils.c	\
+		src/execute_server_command.c
 
 
 OBJS	=	$(SRC:.c=.o)

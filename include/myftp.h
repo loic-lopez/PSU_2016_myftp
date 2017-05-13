@@ -50,7 +50,7 @@ typedef	struct			s_ftp_server
   e_command			client_command[30];
   int 				max_clients;
   int				activity;
-  int 				valread;
+  ssize_t valread;
   int 				sd;
   int 				max_sd;
   struct 	sockaddr_in 	address;
@@ -64,6 +64,8 @@ void	init_server(t_ftp_server *ftp_server, int port);
 void	init_clients(t_ftp_server *ftp_server);
 void	incomming_connection(t_ftp_server *ftp_server);
 void	other_operations(t_ftp_server *ftp_server);
+void	execute_server_command(t_ftp_server *ftp_server);
+void	parse_command(t_ftp_server *ftp_server);
 void	put_error();
 
 #endif /* PSU_2016_MYFTP_MYFTP_H */
