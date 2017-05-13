@@ -39,7 +39,6 @@ Command-Reply Sequences (Mandatory part)
 The server reply is defined to contain the 3-digit code, followed by Space <SP>, followed by one line of text, and terminated by the Telnet end-of-line code <CRLF>.
 
 Example :
-
 -> USER <SP> Username <CRLF>
 <- 331 <SP> User name okay, need password. <CRLF>
 -> PASS <SP> Password <CRLF>
