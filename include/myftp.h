@@ -1,12 +1,12 @@
-//
-// myftp.h for PSU_2016_myftp in /home/lopez_i/PSU_2016_myftp/myftp.h
-//
-// Made by Loïc Lopez
-// Login   <loic.lopez@epitech.eu>
-//
-// Started on  sam. mai 13 11:59:40 2017 Loïc Lopez
-// Last update sam. mai 13 11:59:40 2017 Loïc Lopez
-//
+/*
+** myftp.h for PSU_2016_myftp in /home/lopez_i/PSU_2016_myftp/myftp.h
+**
+** Made by Loïc Lopez
+** Login   <loic.lopez@epitech.eu>
+**
+** Started on  sam. mai 13 11:59:40 2017 Loïc Lopez
+** Last update sam. mai 13 11:59:40 2017 Loïc Lopez
+*/
 
 #ifndef PSU_2016_MYFTP_MYFTP_H
 #define PSU_2016_MYFTP_MYFTP_H
@@ -21,5 +21,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <sys/time.h>
+#include <stdbool.h>
 
-#endif //PSU_2016_MYFTP_MYFTP_H
+void	launch_server(int port, char const *home_user);
+
+#endif /* PSU_2016_MYFTP_MYFTP_H */

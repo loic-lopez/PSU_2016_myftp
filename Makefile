@@ -24,7 +24,8 @@ RED	=	"\033[5;31m"
 CFLAGS	+=	-Wall -Werror -Wextra
 CFLAGS	+=	-I./include/
 
-SRC	=	src/main.c
+SRC	=	src/main.c	\
+		src/server.c
 
 OBJS	=	$(SRC:.c=.o)
 
