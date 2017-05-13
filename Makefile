@@ -25,7 +25,9 @@ CFLAGS	+=	-Wall -Werror -Wextra
 CFLAGS	+=	-I./include/
 
 SRC	=	src/main.c	\
-		src/server.c
+		src/server.c	\
+		src/utils.c
+
 
 OBJS	=	$(SRC:.c=.o)
 
