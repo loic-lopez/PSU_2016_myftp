@@ -23,13 +23,31 @@
 #include <sys/time.h>
 #include <stdbool.h>
 
+typedef enum			e_command
+{
+  WAIT_LOGIN,
+  WAIT_PASSWORD,
+  CWD,
+  CDUP,
+  QUIT,
+  DELE,
+  PWD,
+  PASV,
+  PORT,
+  HELP,
+  NOOP,
+  RETR,
+  STOR,
+  LIST
+}				e_command;
+
 typedef	struct			s_ftp_server
 {
-  bool 				opt;
   int 				master_socket;
   int 				addrlen;
   int  				new_socket;
   int 				client_socket[30];
+  e_command			client_command[30];
   int 				max_clients;
   int				activity;
   int 				valread;
@@ -43,6 +61,9 @@ typedef	struct			s_ftp_server
 
 void	launch_server(int port, char const *home_user);
 void	init_server(t_ftp_server *ftp_server, int port);
+void	init_clients(t_ftp_server *ftp_server);
+void	incomming_connection(t_ftp_server *ftp_server);
+void	other_operations(t_ftp_server *ftp_server);
 void	put_error();
 
 #endif /* PSU_2016_MYFTP_MYFTP_H */
