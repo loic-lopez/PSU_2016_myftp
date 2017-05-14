@@ -27,6 +27,7 @@ CFLAGS	+=	-I./include/
 SRC	=	src/main.c	\
 		src/server.c	\
 		src/utils.c	\
+		src/launch_server_command.c \
 		src/execute_server_command.c \
 		src/str_to_wordtab.c
 

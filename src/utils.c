@@ -10,6 +10,16 @@
 
 #include "myftp.h"
 
+void	free_2D_array(char **tab)
+{
+  int i;
+
+  i = -1;
+  while (tab[++i])
+    free(tab[i]);
+  free(tab);
+}
+
 bool 	subcommand(const char *src, const char *to_compare)
 {
   int 	i;
@@ -19,13 +29,12 @@ bool 	subcommand(const char *src, const char *to_compare)
   is_supported = true;
   while (to_compare[i])
     {
-      if (src[i] == to_compare[i])
-	i++;
-      else
+      if (src[i] != to_compare[i])
 	{
 	  is_supported = false;
 	  break;
 	}
+      i++;
     }
   if ((src[i] >= 'a' && src[i] <= 'z') || (src[i] >= 'A' && src[i] <= 'Z'))
     is_supported = false;

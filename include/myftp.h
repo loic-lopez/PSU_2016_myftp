@@ -23,6 +23,8 @@
 #include <sys/time.h>
 #include <stdbool.h>
 
+extern	const 		char	*g_available_commands[];
+
 typedef enum			e_command
 {
   CWD = 0,
@@ -67,11 +69,19 @@ void	init_server(t_ftp_server *ftp_server, int port);
 void	init_clients(t_ftp_server *ftp_server);
 void	incomming_connection(t_ftp_server *ftp_server);
 void	other_operations(t_ftp_server *ftp_server);
-void	execute_server_command(t_ftp_server *ftp_server);
-bool	parse_command(t_ftp_server *ftp_server, char *command_to_verify);
+void	launch_server_command(t_ftp_server *ftp_server,
+				   int current_client);
+bool	parse_command(t_ftp_server *ftp_server,
+			  char const *command_to_verify,
+			  int current_client);
 char	**str_to_wordtab(char *str, char c);
 void	epur_command(char *command);
 bool 	subcommand(const char *src, const char *to_compare);
 void	put_error();
+void	execute_server_command(t_ftp_server *ftp_server,
+				   char **cmd_actions);
+void	close_client_connection(t_ftp_server *ftp_server,
+				    int current_client);
+void	free_2D_array(char **tab);
 
 #endif /* PSU_2016_MYFTP_MYFTP_H */

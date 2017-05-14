@@ -83,7 +83,7 @@ void	other_operations(t_ftp_server *ftp_server)
 	  ftp_server->valread = read(ftp_server->sd ,
 				     ftp_server->buffer, 1024);
 	  ftp_server->buffer[ftp_server->valread] = '\0';
-	  execute_server_command(ftp_server);
+	  launch_server_command(ftp_server, i);
 	}
     }
 }
@@ -109,11 +109,14 @@ void	launch_server(int port, const char *home_user)
 	  if(ftp_server.sd > ftp_server.max_sd)
 	    ftp_server.max_sd = ftp_server.sd;
 	}
-      ftp_server.activity = select( ftp_server.max_sd + 1 , &ftp_server.readfds , NULL , NULL , NULL);
+      ftp_server.activity = select(ftp_server.max_sd + 1 , &ftp_server.readfds , NULL , NULL , NULL);
       if (ftp_server.activity < 0 && errno != EINTR)
 	fprintf(stderr, "select error");
-      incomming_connection(&ftp_server);
-      other_operations(&ftp_server);
+      else
+	{
+	  incomming_connection(&ftp_server);
+	  other_operations(&ftp_server);
+	}
      // return;
     }
 }
