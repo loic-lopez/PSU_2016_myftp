@@ -73,7 +73,7 @@ void	launch_server_command(t_ftp_server *ftp_server,
 				   int current_client);
 bool	parse_command(t_ftp_server *ftp_server,
 			  char const *command_to_verify,
-			  int current_client);
+			  int current_client, bool *syntax_error);
 char	**str_to_wordtab(char *str, char c);
 void	epur_command(char *command);
 bool 	subcommand(const char *src, const char *to_compare);

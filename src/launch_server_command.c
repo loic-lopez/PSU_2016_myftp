@@ -19,30 +19,27 @@ const 		char	*g_available_commands[] =
 
 
 bool	parse_command(t_ftp_server *ftp_server,
-			  char const *command_to_verify, int current_client)
+			  char const *command_to_verify,
+			  int current_client, bool *syntax_error)
 {
   size_t 	i;
   bool		is_supported;
 
-  if ((ftp_server->client_command[current_client] == WAIT_LOGIN ||
-      ftp_server->client_command[current_client] == WAIT_PASSWORD))
-    is_supported = true;
-  else
-    is_supported = false;
+  ftp_server->client_command[current_client] == WAIT_LOGIN ||
+      ftp_server->client_command[current_client] == WAIT_PASSWORD ?
+  (is_supported = true, *syntax_error = true) :
+  (is_supported = false, *syntax_error = true);
   i = 0;
   while (i < sizeof(g_available_commands)
 	     / sizeof(g_available_commands[0]))
     {
-      if (command_to_verify == NULL)
-	{
-	  ftp_server->client_command[current_client] = STAND_BY;
-	  is_supported = true;
-	  break;
-	}
       if (subcommand(command_to_verify, g_available_commands[i]))
 	{
+	  if (ftp_server->client_command[current_client] != WAIT_LOGIN &&
+	      ftp_server->client_command[current_client] != WAIT_PASSWORD)
+	    ftp_server->client_command[current_client] = (e_command)i;
+	  *syntax_error = false;
 	  is_supported = true;
-	  ftp_server->client_command[current_client] = (e_command)i;
 	  break;
 	}
       i++;
@@ -54,11 +51,14 @@ void	launch_server_command(t_ftp_server *ftp_server,
 				   int current_client)
 {
   char **cmd_actions;
+  bool	syntax_error;
 
+  syntax_error = false;
   epur_command(ftp_server->buffer);
   if ((cmd_actions = str_to_wordtab(ftp_server->buffer, ' ')) == NULL)
     return;
-  if (parse_command(ftp_server, cmd_actions[0], current_client))
+  if (parse_command(ftp_server, cmd_actions[0],
+		    current_client, &syntax_error) && syntax_error == false)
     {
       if (ftp_server->client_command[current_client] == STAND_BY)
 	return;
