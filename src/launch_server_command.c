@@ -24,21 +24,29 @@ bool	parse_command(t_ftp_server *ftp_server,
   size_t 	i;
   bool		is_supported;
 
-
-  is_supported = false;
+  if ((ftp_server->client_command[current_client] == WAIT_LOGIN ||
+      ftp_server->client_command[current_client] == WAIT_PASSWORD))
+    is_supported = true;
+  else
+    is_supported = false;
   i = 0;
-  while (i < sizeof(g_available_commands) / sizeof(g_available_commands[0]))
+  while (i < sizeof(g_available_commands)
+	     / sizeof(g_available_commands[0]))
     {
+      if (command_to_verify == NULL)
+	{
+	  ftp_server->client_command[current_client] = STAND_BY;
+	  is_supported = true;
+	  break;
+	}
       if (subcommand(command_to_verify, g_available_commands[i]))
 	{
 	  is_supported = true;
 	  ftp_server->client_command[current_client] = (e_command)i;
+	  break;
 	}
       i++;
     }
-  if (!is_supported)
-    dprintf(ftp_server->sd,
-	    "501 Syntax Error: %s\r\n", command_to_verify);
   return (is_supported);
 }
 
@@ -48,17 +56,16 @@ void	launch_server_command(t_ftp_server *ftp_server,
   char **cmd_actions;
 
   epur_command(ftp_server->buffer);
-  cmd_actions = str_to_wordtab(ftp_server->buffer, ' ');
+  if ((cmd_actions = str_to_wordtab(ftp_server->buffer, ' ')) == NULL)
+    return;
   if (parse_command(ftp_server, cmd_actions[0], current_client))
     {
-      if (ftp_server->client_command[current_client] == QUIT)
-	close_client_connection(ftp_server, current_client);
-      if (ftp_server->client_command[current_client] == WAIT_LOGIN)
-	ftp_server->client_command[current_client] = WAIT_PASSWORD;
-      else if (ftp_server->client_command[current_client] == WAIT_PASSWORD)
-	  ftp_server->client_command[current_client] = STAND_BY;
-      else
-	  execute_server_command(ftp_server, cmd_actions);
+      if (ftp_server->client_command[current_client] == STAND_BY)
+	return;
+      execute_server_command(ftp_server, cmd_actions, current_client);
     }
+  else
+    dprintf(ftp_server->sd,
+	    "501 Syntax Error: %s\r\n", cmd_actions[0]);
   free_2D_array(cmd_actions);
 }

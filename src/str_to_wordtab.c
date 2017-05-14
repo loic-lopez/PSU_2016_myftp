@@ -48,7 +48,7 @@ char	**str_to_wordtab(char *str, char c)
 
   i = 0;
   l = 0;
-  if (str == NULL)
+  if (str == NULL || countword(str, c) == 0)
     return (NULL);
   if ((tab = malloc((countword(str, c) + 1) * sizeof(char *))) == NULL)
     return (NULL);

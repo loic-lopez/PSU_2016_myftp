@@ -10,19 +10,133 @@
 
 #include "myftp.h"
 
-void	close_client_connection(t_ftp_server *ftp_server, int current_client)
-{
-  /*
-  getpeername(ftp_server->sd , (struct sockaddr*)&ftp_server->address,
-	      (socklen_t*)&ftp_server->addrlen);
-	      */
-  dprintf(ftp_server->sd, "221 Connection Closed by Host\r\n");
-  close(ftp_server->sd);
-  ftp_server->client_socket[current_client] = 0;
-}
-
-void	execute_server_command(t_ftp_server *ftp_server, char **cmd_actions)
+void	execute_cwd(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
   (void)ftp_server;
+  (void)current_client;
   (void)cmd_actions;
+}
+void	execute_cdup(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
+{
+  (void)ftp_server;
+  (void)current_client;
+  (void)cmd_actions;
+}
+void	execute_quit(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
+{
+  (void)cmd_actions;
+  dprintf(ftp_server->sd, "221 %s Confirmed: Connection Closed by Host\r\n",
+	  cmd_actions[0]);
+  close(ftp_server->sd);
+  ftp_server->client_socket[current_client] = 0;
+  ftp_server->client_command[current_client] = WAIT_LOGIN;
+}
+
+void	execute_delete(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
+{
+  (void)cmd_actions;
+  (void)ftp_server;
+  (void)current_client;
+}
+
+void	execute_pwd(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
+{
+  (void)cmd_actions;
+  (void)ftp_server;
+  (void)current_client;
+}
+
+void	execute_pasv(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
+{
+  (void)cmd_actions;
+  (void)ftp_server;
+  (void)current_client;
+}
+
+void	execute_port(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
+{
+  (void)cmd_actions;
+  (void)ftp_server;
+  (void)current_client;
+}
+
+void	execute_help(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
+{
+  (void)cmd_actions;
+  (void)ftp_server;
+  (void)current_client;
+}
+
+void	execute_noop(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
+{
+  (void)cmd_actions;
+  (void)ftp_server;
+  (void)current_client;
+}
+void	execute_retr(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
+{
+  (void)cmd_actions;
+  (void)ftp_server;
+  (void)current_client;
+}
+void	execute_stor(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
+{
+  (void)cmd_actions;
+  (void)ftp_server;
+  (void)current_client;
+}
+void	execute_list(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
+{
+  (void)cmd_actions;
+  (void)ftp_server;
+  (void)current_client;
+}
+void	execute_user_login(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
+{
+  fprintf(stderr, "PASSED");
+  if (strcmp(cmd_actions[0], "USER") == 0)
+    {
+      if (cmd_actions[1] == NULL)
+	dprintf(ftp_server->sd, "332 Need account for login.\r\n");
+      else if (strcmp(cmd_actions[1], "Anonymous") == 0)
+	ftp_server->client_command[current_client] = WAIT_PASSWORD;
+      else
+	  dprintf(ftp_server->sd, "430 Invalid username or password\r\n");
+    }
+  else
+    dprintf(ftp_server->sd, "530 Not logged in\r\n");
+}
+
+void	execute_password(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
+{
+  if (strcmp(cmd_actions[0], "PASS") == 0)
+    {
+      if (cmd_actions[1] == NULL)
+	dprintf(ftp_server->sd, "430 Invalid username or password\r\n");
+      else if (strcmp(cmd_actions[1], "Anonymous") == 0)
+	  ftp_server->client_command[current_client] = WAIT_PASSWORD;
+	else
+	  dprintf(ftp_server->sd, "430 Invalid username or password\r\n");
+    }
+  else
+    dprintf(ftp_server->sd, "530 Not logged in\r\n");
+}
+
+void	execute_server_command(t_ftp_server *ftp_server,
+				   char **cmd_actions, int current_client)
+{
+  void	(*server_functions[])(t_ftp_server *, int, char **) =
+	  {
+		  execute_cwd, execute_cdup, execute_quit, execute_delete,
+		  execute_pwd, execute_pasv, execute_port, execute_help,
+		  execute_noop, execute_retr, execute_stor, execute_list,
+		  execute_user_login, execute_password
+	  };
+  if (ftp_server->client_command[current_client] == WAIT_LOGIN)
+    execute_user_login(ftp_server, current_client, cmd_actions);
+  else if (ftp_server->client_command[current_client] == WAIT_PASSWORD)
+      execute_password(ftp_server, current_client, cmd_actions);
+  else
+      server_functions[ftp_server->client_command[current_client]]
+		(ftp_server, current_client, cmd_actions);
 }

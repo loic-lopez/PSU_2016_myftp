@@ -27,7 +27,7 @@ bool 	subcommand(const char *src, const char *to_compare)
 
   i = 0;
   is_supported = true;
-  while (to_compare[i])
+  while (src[i] && to_compare[i])
     {
       if (src[i] != to_compare[i])
 	{

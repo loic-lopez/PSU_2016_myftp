@@ -79,9 +79,7 @@ void	epur_command(char *command);
 bool 	subcommand(const char *src, const char *to_compare);
 void	put_error();
 void	execute_server_command(t_ftp_server *ftp_server,
-				   char **cmd_actions);
-void	close_client_connection(t_ftp_server *ftp_server,
-				    int current_client);
+				   char **cmd_actions, int current_client);
 void	free_2D_array(char **tab);
 
 #endif /* PSU_2016_MYFTP_MYFTP_H */
