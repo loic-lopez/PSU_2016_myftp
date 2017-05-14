@@ -116,7 +116,7 @@ void	execute_password(t_ftp_server *ftp_server, int current_client, char **cmd_a
       if (cmd_actions[1] == NULL)
 	  {
 	    ftp_server->client_command[current_client] = STAND_BY;
-	    dprintf(ftp_server->sd, "User logged in, proceed.\r\n");
+	    dprintf(ftp_server->sd, "230 User logged in, proceed.\r\n");
 	  }
       else
 	  dprintf(ftp_server->sd, "430 Invalid username or password\r\n");
