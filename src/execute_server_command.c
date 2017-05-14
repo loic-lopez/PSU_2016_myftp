@@ -10,14 +10,42 @@
 
 #include "myftp.h"
 
-void	parse_command(t_ftp_server *ftp_server)
+
+bool	parse_command(t_ftp_server *ftp_server, char *command_to_verify)
 {
-  (void)ftp_server;
+  size_t 	i = 0;
+  bool		is_supported;
+  const 		char	*command[] =
+	  {
+		  "CWD", "CDUP", "QUIT", "DELE", "PWD", "PASV", "PORT", "HELP",
+		  "NOOP", "RETR", "STOR", "LIST", "USER", "PASS",
+	  };
+  is_supported = false;
+  while (i < sizeof(command) / sizeof(command[0]))
+    {
+      if (subcommand(command_to_verify, command[i]))
+	{
+	  is_supported = true;
+
+	}
+      i++;
+    }
+  if (!is_supported)
+    dprintf(ftp_server->sd, "501 Syntax Error: %s\r\n", command_to_verify);
+  return (is_supported);
 }
 
 void	execute_server_command(t_ftp_server *ftp_server)
 {
+  char **cmd_actions;
 
+  epur_command(ftp_server->buffer);
+  cmd_actions = str_to_wordtab(ftp_server->buffer, ' ');
+  if (parse_command(ftp_server, cmd_actions[0]))
+    printf("toto");
+  else
+    return;
+  /*
   getpeername(ftp_server->sd , (struct sockaddr*)&ftp_server->address,
 	      (socklen_t*)&ftp_server->addrlen);
   printf("Host disconnected , ip %s , port %d \n",
@@ -25,4 +53,5 @@ void	execute_server_command(t_ftp_server *ftp_server)
 	 ntohs(ftp_server->address.sin_port));
   close(ftp_server->sd);
   ftp_server->client_socket[ftp_server->sd] = 0;
+   */
 }

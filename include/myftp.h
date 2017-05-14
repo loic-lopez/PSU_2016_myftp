@@ -25,20 +25,23 @@
 
 typedef enum			e_command
 {
-  WAIT_LOGIN,
-  WAIT_PASSWORD,
-  CWD,
-  CDUP,
-  QUIT,
-  DELE,
-  PWD,
-  PASV,
-  PORT,
-  HELP,
-  NOOP,
-  RETR,
-  STOR,
-  LIST
+  CWD = 0,
+  CDUP = 1,
+  QUIT = 2,
+  DELE = 3,
+  PWD = 4,
+  PASV = 5,
+  PORT = 6,
+  HELP = 7,
+  NOOP = 8,
+  RETR = 9,
+  STOR = 10,
+  LIST = 11,
+  USER = 12,
+  PASS = 13,
+  STAND_BY = 14,
+  WAIT_LOGIN = 15,
+  WAIT_PASSWORD = 16,
 }				e_command;
 
 typedef	struct			s_ftp_server
@@ -65,7 +68,10 @@ void	init_clients(t_ftp_server *ftp_server);
 void	incomming_connection(t_ftp_server *ftp_server);
 void	other_operations(t_ftp_server *ftp_server);
 void	execute_server_command(t_ftp_server *ftp_server);
-void	parse_command(t_ftp_server *ftp_server);
+bool	parse_command(t_ftp_server *ftp_server, char *command_to_verify);
+char	**str_to_wordtab(char *str, char c);
+void	epur_command(char *command);
+bool 	subcommand(const char *src, const char *to_compare);
 void	put_error();
 
 #endif /* PSU_2016_MYFTP_MYFTP_H */

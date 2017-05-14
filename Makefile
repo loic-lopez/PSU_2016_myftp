@@ -8,7 +8,7 @@
 ## Last update Sat Mar 11 15:16:26 2017 Loic Lopez
 ##
 
-CC	=	gcc
+CC	=	gcc -g
 
 RM	=	rm -rf
 
@@ -27,7 +27,8 @@ CFLAGS	+=	-I./include/
 SRC	=	src/main.c	\
 		src/server.c	\
 		src/utils.c	\
-		src/execute_server_command.c
+		src/execute_server_command.c \
+		src/str_to_wordtab.c
 
 
 OBJS	=	$(SRC:.c=.o)

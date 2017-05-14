@@ -61,9 +61,10 @@ void	incomming_connection(t_ftp_server *ftp_server)
 			  (socklen_t*)&ftp_server->addrlen)) < 0)
 	put_error();
       while (++i < ftp_server->max_clients)
-	if( ftp_server->client_socket[i] == 0 )
+	if( ftp_server->client_socket[i] == 0)
 	  {
 	    ftp_server->client_socket[i] = ftp_server->new_socket;
+	    dprintf(ftp_server->new_socket, "220 Connection Etablished\r\n");
 	    break;
 	  }
     }

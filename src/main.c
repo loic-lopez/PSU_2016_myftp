@@ -14,7 +14,7 @@ int	main(int ac, char **av)
 {
   if (ac == 1 || ac > 3)
     {
-      fprintf(stderr, "Usage: ./%s port path", av[0]);
+      fprintf(stderr, "Usage: ./%s port path\n", av[0]);
       return (EXIT_FAILURE);
     }
   launch_server(atoi(av[1]), av[2]);
