@@ -33,7 +33,6 @@ The following are the mandatory FTP commands from client to server:
             STOR <SP> <pathname> <CRLF>   : Upload file from client to server
             LIST [<SP> <pathname>] <CRLF> : List files in the current working directory 
 
-
 Command-Reply Sequences (Mandatory part)
 
 The server reply is defined to contain the 3-digit code, followed by Space <SP>, followed by one line of text, and terminated by the Telnet end-of-line code <CRLF>.
