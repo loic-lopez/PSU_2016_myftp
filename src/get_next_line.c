@@ -10,14 +10,14 @@
 
 #include "get_next_line.h"
 
-int		size(char *str)
+int		size(const char *str)
 {
   int		i;
 
   i = 0;
   if (str != NULL)
     {
-      while (str != NULL && str[i] != '\0')
+      while (str[i] != '\0')
 	i++;
     }
   return (i);

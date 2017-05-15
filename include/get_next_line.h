@@ -7,6 +7,7 @@
 ** Started on  lun. mai 15 15:35:43 2017 Loïc Lopez
 ** Last update lun. mai 15 15:35:43 2017 Loïc Lopez
 */
+
 #ifndef PSU_2016_MYFTP_GET_NEXT_LINE_H
 #define PSU_2016_MYFTP_GET_NEXT_LINE_H
 
