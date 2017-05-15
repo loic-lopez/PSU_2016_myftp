@@ -41,15 +41,11 @@ void	init_server(t_ftp_server *ftp_server, int port, const char *home_user)
   ftp_server->address.sin_port = htons(ftp_server->port);
   if (bind(ftp_server->master_socket,
 	   (struct sockaddr *)&ftp_server->address,
-	   sizeof(ftp_server->address)) < 0)
+	   sizeof(ftp_server->address)) < 0
+      || listen(ftp_server->master_socket, 3) < 0)
    put_error();
-  if (listen(ftp_server->master_socket, 3) < 0)
-    put_error();
   ftp_server->addrlen = sizeof(ftp_server->address);
-  if (strcmp(home_user, ".") == 0)
-    ftp_server->user_root_directory = get_current_dir_name();
-  else
-    ftp_server->user_root_directory = strdup(home_user);
+  fill_user_root_directory(ftp_server, home_user);
 }
 
 void	incomming_connection(t_ftp_server *ftp_server)
@@ -71,18 +67,6 @@ void	incomming_connection(t_ftp_server *ftp_server)
 	    break;
 	  }
     }
-}
-
-int 	my_strlen(const char *str)
-{
-  int 	i;
-
-  if (str == NULL)
-    return (0);
-  i = 0;
-  while (str[i])
-    i++;
-  return (i);
 }
 
 void	other_operations(t_ftp_server *ftp_server)

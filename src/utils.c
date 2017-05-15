@@ -10,6 +10,27 @@
 
 #include "myftp.h"
 
+void	fill_user_root_directory(t_ftp_server *ftp_server, const char *src)
+{
+  int 	i;
+  char *path;
+
+  i = -1;
+  path = NULL;
+  if (strcmp(src, ".") == 0)
+    {
+      path = get_current_dir_name();
+      while (path[++i])
+	ftp_server->user_root_directory[i] = path[i];
+      free(path);
+    }
+  else
+    {
+      while (src[++i])
+	ftp_server->user_root_directory[i] = src[i];
+    }
+}
+
 void	free_2D_array(char **tab)
 {
   int i;

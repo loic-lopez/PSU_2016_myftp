@@ -22,7 +22,7 @@ TEAL	=	"\033[1;36m"
 RED	=	"\033[5;31m"
 
 CFLAGS	+=	-Wall -Werror -Wextra
-CFLAGS	+=	-I./include/
+CFLAGS	+=	-I./include/ -I./usr/include/linux
 
 SRC	=	src/main.c	\
 		src/server.c	\

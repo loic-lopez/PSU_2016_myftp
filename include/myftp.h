@@ -23,7 +23,12 @@
 #include <netinet/in.h>
 #include <sys/time.h>
 #include <stdbool.h>
+#include <limits.h>
 #include "get_next_line.h"
+
+#ifndef PATH_MAX
+ #define PATH_MAX 4096
+#endif
 
 char 	*get_current_dir_name(void);
 extern	const 		char	*g_available_commands[];
@@ -65,7 +70,7 @@ typedef	struct			s_ftp_server
   char 				*command;
   fd_set 			readfds;
   int 				port;
-  char 				*user_root_directory;
+  char 				user_root_directory[PATH_MAX];
 }				t_ftp_server;
 
 void	launch_server(int port, char const *home_user);
@@ -85,5 +90,6 @@ void	put_error();
 void	execute_server_command(t_ftp_server *ftp_server,
 				   char **cmd_actions, int current_client);
 void	free_2D_array(char **tab);
+void	fill_user_root_directory(t_ftp_server *ftp_server, const char *src);
 
 #endif /* PSU_2016_MYFTP_MYFTP_H */
