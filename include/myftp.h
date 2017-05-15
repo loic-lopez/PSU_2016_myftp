@@ -11,6 +11,7 @@
 #ifndef PSU_2016_MYFTP_MYFTP_H
 #define PSU_2016_MYFTP_MYFTP_H
 
+#define _GNU_SOURCE
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -55,7 +56,7 @@ typedef	struct			s_ftp_server
   e_command			client_command[30];
   int 				max_clients;
   int				activity;
-  ssize_t valread;
+  ssize_t 			valread;
   int 				sd;
   int 				max_sd;
   struct 	sockaddr_in 	address;

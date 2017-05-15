@@ -41,8 +41,20 @@ void	execute_delete(t_ftp_server *ftp_server, int current_client, char **cmd_act
 
 void	execute_pwd(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
-  (void)cmd_actions;
-  (void)ftp_server;
+  char 	*pwd;
+
+  if (strcmp(cmd_actions[0], "PWD") == 0)
+    {
+      pwd = get_current_dir_name();
+      if (errno != EACCES)
+	dprintf(ftp_server->sd, "257 %s\r\n", pwd);
+      else
+	dprintf(ftp_server->sd, "553 Permission Denied\r\n");
+      free(pwd);
+    }
+  else
+    dprintf(ftp_server->sd,
+	    "501 Syntax Error: %s\r\n", cmd_actions[0]);
   (void)current_client;
 }
 
