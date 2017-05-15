@@ -22,9 +22,8 @@ void	init_clients(t_ftp_server *ftp_server)
     }
 }
 
-void	init_server(t_ftp_server *ftp_server, int port)
+void	init_server(t_ftp_server *ftp_server, int port, const char *home_user)
 {
-
   int 	options;
 
   options = 1;
@@ -47,6 +46,10 @@ void	init_server(t_ftp_server *ftp_server, int port)
   if (listen(ftp_server->master_socket, 3) < 0)
     put_error();
   ftp_server->addrlen = sizeof(ftp_server->address);
+  if (strcmp(home_user, ".") == 0)
+    ftp_server->user_root_directory = get_current_dir_name();
+  else
+    ftp_server->user_root_directory = strdup(home_user);
 }
 
 void	incomming_connection(t_ftp_server *ftp_server)
@@ -93,8 +96,7 @@ void	launch_server(int port, const char *home_user)
   t_ftp_server	ftp_server;
   int 		i;
 
-  (void)home_user;
-  init_server(&ftp_server, port);
+  init_server(&ftp_server, port, home_user);
   while (true)
     {
       FD_ZERO(&ftp_server.readfds);
@@ -110,13 +112,11 @@ void	launch_server(int port, const char *home_user)
 	    ftp_server.max_sd = ftp_server.sd;
 	}
       ftp_server.activity = select(ftp_server.max_sd + 1 , &ftp_server.readfds , NULL , NULL , NULL);
-      if (ftp_server.activity < 0 && errno != EINTR)
-	fprintf(stderr, "select error");
-      else
+      if (ftp_server.activity >= 0 && errno != EINTR)
 	{
 	  incomming_connection(&ftp_server);
 	  other_operations(&ftp_server);
 	}
-     // return;
     }
+  free(ftp_server.user_root_directory);
 }

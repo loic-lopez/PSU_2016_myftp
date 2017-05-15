@@ -24,6 +24,7 @@
 #include <sys/time.h>
 #include <stdbool.h>
 
+char 	*get_current_dir_name(void);
 extern	const 		char	*g_available_commands[];
 
 typedef enum			e_command
@@ -63,10 +64,11 @@ typedef	struct			s_ftp_server
   char 				buffer[1025];
   fd_set 			readfds;
   int 				port;
+  char 				*user_root_directory;
 }				t_ftp_server;
 
 void	launch_server(int port, char const *home_user);
-void	init_server(t_ftp_server *ftp_server, int port);
+void	init_server(t_ftp_server *ftp_server, int port, const char *);
 void	init_clients(t_ftp_server *ftp_server);
 void	incomming_connection(t_ftp_server *ftp_server);
 void	other_operations(t_ftp_server *ftp_server);
