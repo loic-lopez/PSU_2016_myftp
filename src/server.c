@@ -73,6 +73,18 @@ void	incomming_connection(t_ftp_server *ftp_server)
     }
 }
 
+int 	my_strlen(const char *str)
+{
+  int 	i;
+
+  if (str == NULL)
+    return (0);
+  i = 0;
+  while (str[i])
+    i++;
+  return (i);
+}
+
 void	other_operations(t_ftp_server *ftp_server)
 {
   int 	i;
@@ -83,10 +95,12 @@ void	other_operations(t_ftp_server *ftp_server)
       ftp_server->sd = ftp_server->client_socket[i];
       if (FD_ISSET( ftp_server->sd , &ftp_server->readfds))
 	{
-	  ftp_server->valread = read(ftp_server->sd ,
-				     ftp_server->buffer, 1024);
-	  ftp_server->buffer[ftp_server->valread] = '\0';
-	  launch_server_command(ftp_server, i);
+	  ftp_server->command = get_next_line(ftp_server->sd);
+	  if (ftp_server->command != NULL)
+	    {
+	      launch_server_command(ftp_server, i);
+	      free(ftp_server->command);
+	    }
 	}
     }
 }

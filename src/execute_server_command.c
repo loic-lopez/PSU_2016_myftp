@@ -24,7 +24,6 @@ void	execute_cdup(t_ftp_server *ftp_server, int current_client, char **cmd_actio
 }
 void	execute_quit(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
-  (void)cmd_actions;
   dprintf(ftp_server->sd, "221 %s Confirmed: Connection Closed by Host\r\n",
 	  cmd_actions[0]);
   close(ftp_server->sd);

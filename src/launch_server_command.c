@@ -54,8 +54,8 @@ void	launch_server_command(t_ftp_server *ftp_server,
   bool	syntax_error;
 
   syntax_error = false;
-  epur_command(ftp_server->buffer);
-  if ((cmd_actions = str_to_wordtab(ftp_server->buffer, ' ')) == NULL)
+  epur_command(ftp_server->command);
+  if ((cmd_actions = str_to_wordtab(ftp_server->command, ' ')) == NULL)
     return;
   if (parse_command(ftp_server, cmd_actions[0],
 		    current_client, &syntax_error) && syntax_error == false)

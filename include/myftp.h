@@ -23,6 +23,7 @@
 #include <netinet/in.h>
 #include <sys/time.h>
 #include <stdbool.h>
+#include "get_next_line.h"
 
 char 	*get_current_dir_name(void);
 extern	const 		char	*g_available_commands[];
@@ -61,7 +62,7 @@ typedef	struct			s_ftp_server
   int 				sd;
   int 				max_sd;
   struct 	sockaddr_in 	address;
-  char 				buffer[1025];
+  char 				*command;
   fd_set 			readfds;
   int 				port;
   char 				*user_root_directory;

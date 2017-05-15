@@ -29,7 +29,8 @@ SRC	=	src/main.c	\
 		src/utils.c	\
 		src/launch_server_command.c \
 		src/execute_server_command.c \
-		src/str_to_wordtab.c
+		src/str_to_wordtab.c \
+		src/get_next_line.c
 
 
 OBJS	=	$(SRC:.c=.o)
