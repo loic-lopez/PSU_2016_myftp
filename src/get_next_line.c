@@ -84,7 +84,7 @@ char		*get_next_line(const int fd)
     return (free_end(s, stock));
   if (t == -2)
     return (s);
-  if (t != 0 || (t == 0 && stock != NULL && stock[0] != '\0'))
+  if (t != 0 || (stock != NULL && stock[0] != '\0'))
     {
       (stock != NULL) ? free(stock) : free(NULL);
       stock = s - 1;
