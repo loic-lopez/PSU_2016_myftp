@@ -62,6 +62,7 @@ typedef	struct			s_ftp_server
   int  				new_socket;
   int 				client_socket[30];
   e_command			client_command[30];
+  char 				client_path[30][PATH_MAX];
   int 				max_clients;
   int				activity;
   int 				sd;
@@ -70,7 +71,7 @@ typedef	struct			s_ftp_server
   char 				*command;
   fd_set 			readfds;
   int 				port;
-  char 				user_root_directory[PATH_MAX];
+  char 				server_path[PATH_MAX];
 }				t_ftp_server;
 
 void	launch_server(int port, char const *home_user);

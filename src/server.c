@@ -46,7 +46,7 @@ void	init_server(t_ftp_server *ftp_server, int port, const char *home_user)
    put_error();
   ftp_server->addrlen = sizeof(ftp_server->address);
   fill_user_root_directory(ftp_server, home_user);
-  chdir(ftp_server->user_root_directory);
+  chdir(ftp_server->client_path[0]);
 }
 
 void	incomming_connection(t_ftp_server *ftp_server)
@@ -61,7 +61,7 @@ void	incomming_connection(t_ftp_server *ftp_server)
 			  (socklen_t*)&ftp_server->addrlen)) < 0)
 	put_error();
       while (++i < ftp_server->max_clients)
-	if( ftp_server->client_socket[i] == 0)
+	if(ftp_server->client_socket[i] == 0)
 	  {
 	    ftp_server->client_socket[i] = ftp_server->new_socket;
 	    dprintf(ftp_server->new_socket, "220 Connection Etablished\r\n");
