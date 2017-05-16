@@ -46,6 +46,7 @@ void	init_server(t_ftp_server *ftp_server, int port, const char *home_user)
    put_error();
   ftp_server->addrlen = sizeof(ftp_server->address);
   fill_user_root_directory(ftp_server, home_user);
+  chdir(ftp_server->user_root_directory);
 }
 
 void	incomming_connection(t_ftp_server *ftp_server)
@@ -77,14 +78,12 @@ void	other_operations(t_ftp_server *ftp_server)
   while (++i < ftp_server->max_clients)
     {
       ftp_server->sd = ftp_server->client_socket[i];
-      if (FD_ISSET( ftp_server->sd , &ftp_server->readfds))
+      if (FD_ISSET(ftp_server->sd, &ftp_server->readfds))
 	{
 	  ftp_server->command = get_next_line(ftp_server->sd);
 	  if (ftp_server->command != NULL)
-	    {
-	      launch_server_command(ftp_server, i);
-	      free(ftp_server->command);
-	    }
+	    launch_server_command(ftp_server, i);
+	  free(ftp_server->command);
 	}
     }
 }
@@ -116,5 +115,4 @@ void	launch_server(int port, const char *home_user)
 	  other_operations(&ftp_server);
 	}
     }
-  free(ftp_server.user_root_directory);
 }

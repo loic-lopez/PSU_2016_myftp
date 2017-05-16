@@ -14,21 +14,30 @@ void	fill_user_root_directory(t_ftp_server *ftp_server, const char *src)
 {
   int 	i;
   char *path;
+  DIR	*dir;
 
   i = -1;
-  path = NULL;
-  if (strcmp(src, ".") == 0)
+  if (strcmp(src, ".") == 0 || strcmp(src, "./") == 0)
     {
       path = get_current_dir_name();
       while (path[++i])
 	ftp_server->user_root_directory[i] = path[i];
+      ftp_server->user_root_directory[i] = 0;
       free(path);
     }
   else
     {
       while (src[++i])
 	ftp_server->user_root_directory[i] = src[i];
+      ftp_server->user_root_directory[i] = 0;
     }
+  if (!(dir = opendir(ftp_server->user_root_directory)))
+    {
+      strcmp(src, "") == 0 ? (src = "NULL") : (src = src);
+      fprintf(stderr, "%s: ", src);
+      put_error();
+    }
+  closedir(dir);
 }
 
 void	free_2D_array(char **tab)

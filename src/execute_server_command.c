@@ -24,7 +24,8 @@ void	execute_cdup(t_ftp_server *ftp_server, int current_client, char **cmd_actio
 }
 void	execute_quit(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
-  dprintf(ftp_server->sd, "221 %s Confirmed: Connection Closed by Host\r\n",
+  dprintf(ftp_server->sd,
+	  "221 %s Confirmed: Connection Closed by Host. Goodbye.\r\n",
 	  cmd_actions[0]);
   close(ftp_server->sd);
   ftp_server->client_socket[current_client] = 0;
@@ -80,6 +81,7 @@ void	execute_help(t_ftp_server *ftp_server, int current_client, char **cmd_actio
 
 void	execute_noop(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
+  dprintf(ftp_server->sd, "200 NOOP ok.\r\n");
   (void)cmd_actions;
   (void)ftp_server;
   (void)current_client;
@@ -117,7 +119,7 @@ void	execute_user_login(t_ftp_server *ftp_server, int current_client, char **cmd
 	  dprintf(ftp_server->sd, "430 Invalid username or password.\r\n");
     }
   else
-    dprintf(ftp_server->sd, "530 Not logged in\r\n");
+    dprintf(ftp_server->sd, "530 Please login with USER and PASS.\r\n");
 }
 
 void	execute_password(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
@@ -133,7 +135,7 @@ void	execute_password(t_ftp_server *ftp_server, int current_client, char **cmd_a
 	  dprintf(ftp_server->sd, "430 Invalid username or password\r\n");
     }
   else
-    dprintf(ftp_server->sd, "530 Not logged in\r\n");
+    dprintf(ftp_server->sd, "530 Please login with USER and PASS.\r\n");
 }
 
 void	execute_server_command(t_ftp_server *ftp_server,

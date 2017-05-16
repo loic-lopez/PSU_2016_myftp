@@ -24,6 +24,7 @@
 #include <sys/time.h>
 #include <stdbool.h>
 #include <limits.h>
+#include <dirent.h>
 #include "get_next_line.h"
 
 #ifndef PATH_MAX
@@ -63,7 +64,6 @@ typedef	struct			s_ftp_server
   e_command			client_command[30];
   int 				max_clients;
   int				activity;
-  ssize_t 			valread;
   int 				sd;
   int 				max_sd;
   struct 	sockaddr_in 	address;
