@@ -111,12 +111,12 @@ void	execute_user_login(t_ftp_server *ftp_server, int current_client, char **cmd
       if (cmd_actions[1] == NULL)
 	dprintf(ftp_server->sd, "332 Need account for login.\r\n");
       else if (strcmp(cmd_actions[1], "Anonymous") == 0)
-	  {
-	    ftp_server->client_command[current_client] = WAIT_PASSWORD;
-	    dprintf(ftp_server->sd, "331 User name okay, need password.\r\n");
-	  }
+	{
+	  ftp_server->client_command[current_client] = WAIT_PASSWORD;
+	  dprintf(ftp_server->sd, "331 User name okay, need password.\r\n");
+	}
       else
-	  dprintf(ftp_server->sd, "430 Invalid username or password.\r\n");
+	dprintf(ftp_server->sd, "430 Invalid username or password.\r\n");
     }
   else
     dprintf(ftp_server->sd, "530 Please login with USER and PASS.\r\n");
@@ -127,32 +127,32 @@ void	execute_password(t_ftp_server *ftp_server, int current_client, char **cmd_a
   if (strcmp(cmd_actions[0], "PASS") == 0)
     {
       if (cmd_actions[1] == NULL)
-	  {
-	    ftp_server->client_command[current_client] = STAND_BY;
-	    dprintf(ftp_server->sd, "230 User logged in, proceed.\r\n");
-	  }
+	{
+	  ftp_server->client_command[current_client] = STAND_BY;
+	  dprintf(ftp_server->sd, "230 User logged in, proceed.\r\n");
+	}
       else
-	  dprintf(ftp_server->sd, "430 Invalid username or password\r\n");
+	dprintf(ftp_server->sd, "430 Invalid username or password\r\n");
     }
   else
     dprintf(ftp_server->sd, "530 Please login with USER and PASS.\r\n");
 }
 
 void	execute_server_command(t_ftp_server *ftp_server,
-				   char **cmd_actions, int current_client)
+			       char **cmd_actions, int current_client)
 {
   void	(*server_functions[])(t_ftp_server *, int, char **) =
-	  {
-		  execute_cwd, execute_cdup, execute_quit, execute_delete,
-		  execute_pwd, execute_pasv, execute_port, execute_help,
-		  execute_noop, execute_retr, execute_stor, execute_list,
-		  execute_user_login, execute_password
-	  };
+    {
+      execute_cwd, execute_cdup, execute_quit, execute_delete,
+      execute_pwd, execute_pasv, execute_port, execute_help,
+      execute_noop, execute_retr, execute_stor, execute_list,
+      execute_user_login, execute_password
+    };
   if (ftp_server->client_command[current_client] == WAIT_LOGIN)
     execute_user_login(ftp_server, current_client, cmd_actions);
   else if (ftp_server->client_command[current_client] == WAIT_PASSWORD)
-      execute_password(ftp_server, current_client, cmd_actions);
+    execute_password(ftp_server, current_client, cmd_actions);
   else
-      server_functions[ftp_server->client_command[current_client]]
-		(ftp_server, current_client, cmd_actions);
+    server_functions[ftp_server->client_command[current_client]]
+      (ftp_server, current_client, cmd_actions);
 }
