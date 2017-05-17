@@ -14,7 +14,8 @@ void	verify_is_a_valid_directory(t_ftp_server *ftp_server, const char *src)
 {
   DIR	*dir;
 
-  if (!(dir = opendir(ftp_server->client_path[0])))
+  (void)ftp_server;
+  if (!(dir = opendir(src)))
     {
       strcmp(src, "") == 0 ? (src = "NULL") : (src = src);
       fprintf(stderr, "%s: ", src);
@@ -34,11 +35,14 @@ void	fill_client_array(t_ftp_server *ftp_server, const char *str)
       i = -1;
       while (str[++i])
 	ftp_server->client_path[j][i] = str[i];
+      if (str[i - 1] != '/')
+	ftp_server->client_path[j][i++] = '/';
       ftp_server->client_path[j][i] = 0;
     }
   j = -1;
   while (ftp_server->client_path[0][++j])
     ftp_server->server_path[j] = ftp_server->client_path[0][j];
+  ftp_server->server_path[j] = 0;
 }
 
 void	fill_user_root_directory(t_ftp_server *ftp_server, const char *src)

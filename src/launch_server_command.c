@@ -30,13 +30,13 @@ bool	parse_command(t_ftp_server *ftp_server,
   (is_supported = true, *syntax_error = true) :
   (is_supported = false, *syntax_error = true);
   i = 0;
-  while (i < sizeof(g_available_commands)
-	     / sizeof(g_available_commands[0]))
+  while (i < sizeof(g_available_commands) / sizeof(g_available_commands[0]))
     {
       if (subcommand(command_to_verify, g_available_commands[i]))
 	{
-	  if (ftp_server->client_command[current_client] != WAIT_LOGIN &&
+	  if ((ftp_server->client_command[current_client] != WAIT_LOGIN &&
 	      ftp_server->client_command[current_client] != WAIT_PASSWORD)
+	      || (strcmp(command_to_verify, "QUIT") == 0))
 	    ftp_server->client_command[current_client] = (e_command)i;
 	  *syntax_error = false;
 	  is_supported = true;

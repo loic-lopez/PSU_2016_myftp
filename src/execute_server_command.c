@@ -12,9 +12,13 @@
 
 void	execute_cwd(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
-  (void)ftp_server;
-  (void)current_client;
-  (void)cmd_actions;
+  if (strcmp(cmd_actions[0], "CWD") == 0)
+    {
+      (void)current_client;
+    }
+  else
+    dprintf(ftp_server->sd,
+	    "501 Syntax Error: %s\r\n", cmd_actions[0]);
 }
 void	execute_cdup(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
@@ -24,12 +28,17 @@ void	execute_cdup(t_ftp_server *ftp_server, int current_client, char **cmd_actio
 }
 void	execute_quit(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
+  int 	i;
+
+  i = -1;
   dprintf(ftp_server->sd,
 	  "221 %s Confirmed: Connection Closed by Host. Goodbye.\r\n",
 	  cmd_actions[0]);
   close(ftp_server->sd);
   ftp_server->client_socket[current_client] = 0;
   ftp_server->client_command[current_client] = WAIT_LOGIN;
+  while (ftp_server->server_path[++i])
+    ftp_server->client_path[current_client][i] = ftp_server->server_path[i];
 }
 
 void	execute_delete(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
@@ -41,16 +50,19 @@ void	execute_delete(t_ftp_server *ftp_server, int current_client, char **cmd_act
 
 void	execute_pwd(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
-  char 	*pwd;
-
   if (strcmp(cmd_actions[0], "PWD") == 0)
     {
-      pwd = get_current_dir_name();
       if (errno != EACCES)
-	dprintf(ftp_server->sd, "257 %s\r\n", pwd);
+	{
+	  if (strcmp(ftp_server->server_path,
+		     ftp_server->client_path[current_client]) == 0)
+	    dprintf(ftp_server->sd, "257 \"%s\"\r\n", "/");
+	  else
+	    dprintf(ftp_server->sd, "257 \"%s%s\"\r\n", "/",
+		    &ftp_server->client_path[current_client][strlen(ftp_server->server_path)]);
+	}
       else
 	dprintf(ftp_server->sd, "553 Permission Denied\r\n");
-      free(pwd);
     }
   else
     dprintf(ftp_server->sd,

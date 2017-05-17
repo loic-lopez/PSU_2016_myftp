@@ -39,7 +39,7 @@ void	epur_command(char *command)
   i = 0;
   while (command[i])
     {
-      if (command[i] == '\r' || command[i] == '\n')
+      if (command[i] == '\r')
 	command[i] = ' ';
       i++;
     }
