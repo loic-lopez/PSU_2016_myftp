@@ -10,27 +10,24 @@
 
 #include "myftp.h"
 
-const 		char	*g_available_commands[] =
-{
-	"CWD", "CDUP", "QUIT", "DELE", "PWD",
-	"PASV", "PORT", "HELP",
-	"NOOP", "RETR", "STOR", "LIST", "USER", "PASS",
-};
-
-
 bool	parse_command(t_ftp_server *ftp_server,
 			  char const *command_to_verify,
 			  int current_client, bool *syntax_error)
 {
   size_t 	i;
   bool		is_supported;
+  const 		char	*available_commands[] =
+	  {
+		  "CWD", "CDUP", "QUIT", "DELE", "PWD", "PASV", "PORT",
+		  "HELP", "NOOP", "RETR", "STOR", "LIST", "USER", "PASS",
+	  };
 
   is_supported = false;
   *syntax_error = true;
   i = 0;
-  while (i < sizeof(g_available_commands) / sizeof(g_available_commands[0]))
+  while (i < sizeof(available_commands) / sizeof(available_commands[0]))
     {
-      if (subcommand(command_to_verify, g_available_commands[i]))
+      if (subcommand(command_to_verify, available_commands[i]))
 	{
 	  if ((ftp_server->client_command[current_client] != WAIT_LOGIN &&
 	      ftp_server->client_command[current_client] != WAIT_PASSWORD)

@@ -10,6 +10,27 @@
 
 #include "myftp.h"
 
+bool	check_if_destination_exists(t_ftp_server *ftp_server,
+					const char *dest, int current_client)
+{
+  DIR	*dir;
+  char 	complete_path[PATH_MAX];
+  int 	path;
+  int 	i;
+
+  i = 0;
+  path = 0;
+  while (ftp_server->client_path[current_client][i])
+    complete_path[path++] = ftp_server->client_path[current_client][i++];
+  i = 0;
+  while (dest[i])
+    complete_path[path++] = dest[i++];
+  if (!(dir = opendir(complete_path)))
+    return (false);
+  closedir(dir);
+  return (true);
+}
+
 void	execute_pwd(t_ftp_server *ftp_server,
 			int current_client, char **cmd_actions)
 {
@@ -30,15 +51,39 @@ void	execute_pwd(t_ftp_server *ftp_server,
 void	execute_cwd(t_ftp_server *ftp_server,
 			int current_client, char **cmd_actions)
 {
-  (void)current_client;
-  (void)cmd_actions;
-  (void)ftp_server;
+  size_t 	i;
+  size_t 	path;
+
+  if (strcmp(cmd_actions[1], "..") == 0)
+    execute_cdup(ftp_server, current_client, cmd_actions);
+  else if (cmd_actions[1] == NULL ||
+	  !check_if_destination_exists(ftp_server, cmd_actions[1], current_client))
+    dprintf(ftp_server->sd, "550 Failed to change directory.\r\n");
+  else
+    {
+      i = strlen(ftp_server->client_path[current_client]);
+      path = 0;
+      while (cmd_actions[1][path])
+	ftp_server->client_path[current_client][i++] = cmd_actions[1][path++];
+      dprintf(ftp_server->sd, "250 Directory successfully changed.\r\n");
+    }
 }
 
 void	execute_cdup(t_ftp_server *ftp_server,
 			 int current_client, char **cmd_actions)
 {
-  (void)ftp_server;
-  (void)current_client;
-  (void)cmd_actions;
+  size_t i;
+
+  if (strcmp(ftp_server->client_path[current_client],
+	     ftp_server->server_path) != 0)
+    {
+      i = strlen(ftp_server->client_path[current_client]);
+      while (ftp_server->client_path[current_client][i] != '/')
+	i--;
+      memmove(&ftp_server->client_path[current_client][i],
+	      &ftp_server->client_path[current_client][i + i],
+	      strlen(ftp_server->client_path[current_client]) - i);
+    }
+  dprintf(ftp_server->sd, "250 %s: Directory successfully changed.\r\n",
+	  cmd_actions[0]);
 }
