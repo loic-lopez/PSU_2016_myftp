@@ -10,14 +10,13 @@
 
 #include "myftp.h"
 
-void	verify_is_a_valid_directory(t_ftp_server *ftp_server, const char *src)
+void	verify_is_a_valid_directory(const char *src)
 {
   DIR	*dir;
 
-  (void)ftp_server;
   if (!(dir = opendir(src)))
     {
-      strcmp(src, "") == 0 ? (src = "NULL") : (src = src);
+      strcmp(src, "") == 0 ? (src = "NULL") : 0;
       fprintf(stderr, "%s: ", src);
       put_error();
     }
@@ -57,7 +56,7 @@ void	fill_user_root_directory(t_ftp_server *ftp_server, const char *src)
     }
   else
     {
-      verify_is_a_valid_directory(ftp_server, src);
+      verify_is_a_valid_directory(src);
       fill_client_array(ftp_server, src);
     }
 }
