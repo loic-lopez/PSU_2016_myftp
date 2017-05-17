@@ -88,9 +88,19 @@ char	**str_to_wordtab(char *str, char c);
 void	epur_command(char *command);
 bool 	subcommand(const char *src, const char *to_compare);
 void	put_error();
-void	execute_server_command(t_ftp_server *ftp_server,
-				   char **cmd_actions, int current_client);
 void	free_2D_array(char **tab);
 void	fill_user_root_directory(t_ftp_server *ftp_server, const char *src);
+void	execute_server_command(t_ftp_server *ftp_server,
+				   char **cmd_actions, int current_client);
+void	execute_user_login(t_ftp_server *ftp_server,
+			       int current_client, char **cmd_actions);
+void	execute_password(t_ftp_server *ftp_server,
+			     int current_client, char **cmd_actions);
+void	execute_pwd(t_ftp_server *ftp_server,
+			int current_client, char **cmd_actions);
+void	execute_cwd(t_ftp_server *ftp_server,
+			int current_client, char **cmd_actions);
+void	execute_cdup(t_ftp_server *ftp_server,
+			 int current_client, char **cmd_actions);
 
 #endif /* PSU_2016_MYFTP_MYFTP_H */

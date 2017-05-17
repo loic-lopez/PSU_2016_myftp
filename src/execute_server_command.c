@@ -10,22 +10,6 @@
 
 #include "myftp.h"
 
-void	execute_cwd(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
-{
-  if (strcmp(cmd_actions[0], "CWD") == 0)
-    {
-      (void)current_client;
-    }
-  else
-    dprintf(ftp_server->sd,
-	    "501 Syntax Error: %s\r\n", cmd_actions[0]);
-}
-void	execute_cdup(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
-{
-  (void)ftp_server;
-  (void)current_client;
-  (void)cmd_actions;
-}
 void	execute_quit(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
   int 	i;
@@ -48,27 +32,7 @@ void	execute_delete(t_ftp_server *ftp_server, int current_client, char **cmd_act
   (void)current_client;
 }
 
-void	execute_pwd(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
-{
-  if (strcmp(cmd_actions[0], "PWD") == 0)
-    {
-      if (errno != EACCES)
-	{
-	  if (strcmp(ftp_server->server_path,
-		     ftp_server->client_path[current_client]) == 0)
-	    dprintf(ftp_server->sd, "257 \"%s\"\r\n", "/");
-	  else
-	    dprintf(ftp_server->sd, "257 \"%s%s\"\r\n", "/",
-		    &ftp_server->client_path[current_client][strlen(ftp_server->server_path)]);
-	}
-      else
-	dprintf(ftp_server->sd, "553 Permission Denied\r\n");
-    }
-  else
-    dprintf(ftp_server->sd,
-	    "501 Syntax Error: %s\r\n", cmd_actions[0]);
-  (void)current_client;
-}
+
 
 void	execute_pasv(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
@@ -93,8 +57,7 @@ void	execute_help(t_ftp_server *ftp_server, int current_client, char **cmd_actio
 
 void	execute_noop(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
-  dprintf(ftp_server->sd, "200 NOOP ok.\r\n");
-  (void)cmd_actions;
+  dprintf(ftp_server->sd, "200 %s ok.\r\n", cmd_actions[0]);
   (void)ftp_server;
   (void)current_client;
 }
@@ -115,39 +78,6 @@ void	execute_list(t_ftp_server *ftp_server, int current_client, char **cmd_actio
   (void)cmd_actions;
   (void)ftp_server;
   (void)current_client;
-}
-void	execute_user_login(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
-{
-  if (strcmp(cmd_actions[0], "USER") == 0)
-    {
-      if (cmd_actions[1] == NULL)
-	dprintf(ftp_server->sd, "332 Need account for login.\r\n");
-      else if (strcmp(cmd_actions[1], "Anonymous") == 0)
-	{
-	  ftp_server->client_command[current_client] = WAIT_PASSWORD;
-	  dprintf(ftp_server->sd, "331 User name okay, need password.\r\n");
-	}
-      else
-	dprintf(ftp_server->sd, "430 Invalid username or password.\r\n");
-    }
-  else
-    dprintf(ftp_server->sd, "530 Please login with USER and PASS.\r\n");
-}
-
-void	execute_password(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
-{
-  if (strcmp(cmd_actions[0], "PASS") == 0)
-    {
-      if (cmd_actions[1] == NULL)
-	{
-	  ftp_server->client_command[current_client] = STAND_BY;
-	  dprintf(ftp_server->sd, "230 User logged in, proceed.\r\n");
-	}
-      else
-	dprintf(ftp_server->sd, "430 Invalid username or password\r\n");
-    }
-  else
-    dprintf(ftp_server->sd, "530 Please login with USER and PASS.\r\n");
 }
 
 void	execute_server_command(t_ftp_server *ftp_server,
