@@ -27,6 +27,7 @@ void	execute_quit(t_ftp_server *ftp_server, int current_client, char **cmd_actio
 
 void	execute_delete(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
+  dprintf(ftp_server->sd, "550 Failed to open file.");
   (void)cmd_actions;
   (void)ftp_server;
   (void)current_client;
@@ -34,6 +35,7 @@ void	execute_delete(t_ftp_server *ftp_server, int current_client, char **cmd_act
 
 void	execute_pasv(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
+  dprintf(ftp_server->sd, "227 Entering Passive Mode.\r\n");
   (void)cmd_actions;
   (void)ftp_server;
   (void)current_client;
@@ -41,6 +43,7 @@ void	execute_pasv(t_ftp_server *ftp_server, int current_client, char **cmd_actio
 
 void	execute_port(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
+  dprintf(ftp_server->sd, "200 PORT command successful.\r\n");
   (void)cmd_actions;
   (void)ftp_server;
   (void)current_client;
@@ -62,7 +65,7 @@ void	execute_help(t_ftp_server *ftp_server,
   while (i < sizeof(available_commands) / sizeof(available_commands[0]))
     {
       if (i % 4 == 0)
-	dprintf(ftp_server->sd, "\r\n ");
+	dprintf(ftp_server->sd, "\r\n %3s", "");
       if (strlen(available_commands[i]) == 3)
 	dprintf(ftp_server->sd, "%s%3s", available_commands[i], "");
       else
@@ -75,7 +78,6 @@ void	execute_help(t_ftp_server *ftp_server,
 void	execute_noop(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
   dprintf(ftp_server->sd, "200 %s ok.\r\n", cmd_actions[0]);
-  (void)ftp_server;
   (void)current_client;
 }
 void	execute_retr(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
@@ -92,6 +94,8 @@ void	execute_stor(t_ftp_server *ftp_server, int current_client, char **cmd_actio
 }
 void	execute_list(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
+  dprintf(ftp_server->sd, "150 Here comes the directory listing.");
+  dprintf(ftp_server->sd, "226 Directory send OK.");
   (void)cmd_actions;
   (void)ftp_server;
   (void)current_client;
