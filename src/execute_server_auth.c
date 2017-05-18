@@ -10,12 +10,32 @@
 
 #include "myftp.h"
 
+
+void	execute_quit(t_ftp_server *ftp_server,
+			 int current_client, char **cmd_actions)
+{
+  int 	i;
+
+  i = -1;
+  dprintf(ftp_server->sd,
+	  "221 %s Confirmed: Connection Closed by Host. Goodbye.\r\n",
+	  cmd_actions[0]);
+  close(ftp_server->sd);
+  ftp_server->client_socket[current_client] = 0;
+  ftp_server->client_command[current_client] = WAIT_LOGIN;
+  ftp_server->client_already_connected[current_client] = false;
+  while (ftp_server->server_path[++i])
+    ftp_server->client_path[current_client][i] = ftp_server->server_path[i];
+}
+
 void	execute_user_login(t_ftp_server *ftp_server,
 			       int current_client, char **cmd_actions)
 {
   size_t i;
 
-  if (strcmp(cmd_actions[0], "USER") == 0)
+  if (ftp_server->client_already_connected[current_client])
+    dprintf(ftp_server->sd, "530 Can't change from guest user.\r\n");
+  else if (strcmp(cmd_actions[0], "USER") == 0)
     {
       if (cmd_actions[1] == NULL)
 	dprintf(ftp_server->sd, "331 Need account for login.\r\n");
@@ -32,18 +52,21 @@ void	execute_user_login(t_ftp_server *ftp_server,
 	}
     }
   else
-    dprintf(ftp_server->sd, "530 Permission denied.\r\n");
+    dprintf(ftp_server->sd, "530 Please login with USER and PASS.\r\n");
 }
 
 void	execute_password(t_ftp_server *ftp_server,
 			     int current_client, char **cmd_actions)
 {
-  if (strcmp(cmd_actions[0], "PASS") == 0)
+  if (ftp_server->client_already_connected[current_client])
+    dprintf(ftp_server->sd, "230 Already logged in.\r\n");
+  else if (strcmp(cmd_actions[0], "PASS") == 0)
     {
       if (cmd_actions[1] == NULL
 	  && strcmp(ftp_server->last_login, "Anonymous") == 0)
 	{
 	  ftp_server->client_command[current_client] = STAND_BY;
+	  ftp_server->client_already_connected[current_client] = true;
 	  dprintf(ftp_server->sd, "230 User logged in, proceed.\r\n");
 	}
       else

@@ -10,21 +10,6 @@
 
 #include "myftp.h"
 
-void	execute_quit(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
-{
-  int 	i;
-
-  i = -1;
-  dprintf(ftp_server->sd,
-	  "221 %s Confirmed: Connection Closed by Host. Goodbye.\r\n",
-	  cmd_actions[0]);
-  close(ftp_server->sd);
-  ftp_server->client_socket[current_client] = 0;
-  ftp_server->client_command[current_client] = WAIT_LOGIN;
-  while (ftp_server->server_path[++i])
-    ftp_server->client_path[current_client][i] = ftp_server->server_path[i];
-}
-
 void	execute_delete(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
   dprintf(ftp_server->sd, "550 Failed to open file.");

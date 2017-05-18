@@ -63,6 +63,7 @@ typedef	struct			s_ftp_server
   int 				client_socket[30];
   e_command			client_command[30];
   char 				client_path[30][PATH_MAX];
+  bool				client_already_connected[30];
   int 				max_clients;
   int				activity;
   int 				sd;
@@ -102,6 +103,8 @@ void	execute_pwd(t_ftp_server *ftp_server,
 void	execute_cwd(t_ftp_server *ftp_server,
 			int current_client, char **cmd_actions);
 void	execute_cdup(t_ftp_server *ftp_server,
+			 int current_client, char **cmd_actions);
+void	execute_quit(t_ftp_server *ftp_server,
 			 int current_client, char **cmd_actions);
 
 #endif /* PSU_2016_MYFTP_MYFTP_H */

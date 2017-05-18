@@ -19,6 +19,7 @@ void	init_clients(t_ftp_server *ftp_server)
     {
       ftp_server->client_socket[i] = 0;
       ftp_server->client_command[i] = WAIT_LOGIN;
+      ftp_server->client_already_connected[i] = false;
     }
 }
 
