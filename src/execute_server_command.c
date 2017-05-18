@@ -34,32 +34,6 @@ void	execute_port(t_ftp_server *ftp_server, int current_client, char **cmd_actio
   (void)current_client;
 }
 
-void	execute_help(t_ftp_server *ftp_server,
-			 int current_client, char **cmd_actions)
-{
-  size_t i;
-  const 		char	*available_commands[] =
-	  {
-		  "CWD", "CDUP", "QUIT", "DELE", "PWD", "PASV", "PORT",
-		  "HELP", "NOOP", "RETR", "STOR", "LIST", "USER", "PASS",
-	  };
-
-  i = 0;
-  (void)current_client;
-  dprintf(ftp_server->sd, "214-The following commands are recognized.");
-  while (i < sizeof(available_commands) / sizeof(available_commands[0]))
-    {
-      if (i % 4 == 0)
-	dprintf(ftp_server->sd, "\r\n %3s", "");
-      if (strlen(available_commands[i]) == 3)
-	dprintf(ftp_server->sd, "%s%3s", available_commands[i], "");
-      else
-	dprintf(ftp_server->sd, "%s%2s", available_commands[i], "");
-      i++;
-    }
-  dprintf(ftp_server->sd, "\r\n214 %s OK.\r\n", cmd_actions[0]);
-}
-
 void	execute_noop(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
   dprintf(ftp_server->sd, "200 %s ok.\r\n", cmd_actions[0]);

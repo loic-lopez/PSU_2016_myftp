@@ -106,5 +106,7 @@ void	execute_cdup(t_ftp_server *ftp_server,
 			 int current_client, char **cmd_actions);
 void	execute_quit(t_ftp_server *ftp_server,
 			 int current_client, char **cmd_actions);
+void	execute_help(t_ftp_server *ftp_server,
+			 int current_client, char **cmd_actions);
 
 #endif /* PSU_2016_MYFTP_MYFTP_H */
