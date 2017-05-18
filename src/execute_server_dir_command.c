@@ -53,7 +53,7 @@ void	execute_cwd(t_ftp_server *ftp_server,
 			int current_client, char **cmd_actions)
 {
   size_t 	i;
-  size_t 	path;
+  int	 	path;
 
   if (strcmp(cmd_actions[1], ".") == 0)
     dprintf(ftp_server->sd, "250 Directory successfully changed.\r\n");
@@ -66,12 +66,15 @@ void	execute_cwd(t_ftp_server *ftp_server,
   else
     {
       i = strlen(ftp_server->client_path[current_client]);
-      path = 0;
+      cmd_actions[1][0] == '/' ? (path = 1) : (path = 0);
       while (cmd_actions[1][path])
 	ftp_server->client_path[current_client][i++] = cmd_actions[1][path++];
-      ftp_server->client_path[current_client][i] = '/';
+      if (ftp_server->client_path[current_client][i - 1] != '/'
+	  && ftp_server->client_path[current_client][i] != '/')
+	ftp_server->client_path[current_client][i] = '/';
       i++;
       ftp_server->client_path[current_client][i] = 0;
+      fprintf(stderr, &cmd_actions[1][path]);
       dprintf(ftp_server->sd, "250 Directory successfully changed.\r\n");
     }
 }
