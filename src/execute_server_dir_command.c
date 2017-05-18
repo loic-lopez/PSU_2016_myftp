@@ -54,7 +54,9 @@ void	execute_cwd(t_ftp_server *ftp_server,
   size_t 	i;
   size_t 	path;
 
-  if (strcmp(cmd_actions[1], "..") == 0)
+  if (strcmp(cmd_actions[1], ".") == 0)
+    dprintf(ftp_server->sd, "250 Directory successfully changed.\r\n");
+  else if (strcmp(cmd_actions[1], "..") == 0)
     execute_cdup(ftp_server, current_client, cmd_actions);
   else if (cmd_actions[1] == NULL ||
 	  !check_if_destination_exists(ftp_server, cmd_actions[1],
