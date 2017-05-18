@@ -51,7 +51,7 @@ void	launch_server_command(t_ftp_server *ftp_server,
   syntax_error = false;
   epur_command(ftp_server->command);
   if ((cmd_actions = str_to_wordtab(ftp_server->command, ' ')) == NULL)
-    return;
+    return ((void)dprintf(ftp_server->sd, "500 Syntax Error\r\n"));
   if (parse_command(ftp_server, cmd_actions[0],
 		    current_client, &syntax_error) && syntax_error == false)
     {

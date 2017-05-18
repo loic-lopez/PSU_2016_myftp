@@ -37,6 +37,8 @@ void	epur_command(char *command)
   int 	i;
 
   i = 0;
+  if (!command)
+    return;
   while (command[i])
     {
       if (command[i] == '\r')

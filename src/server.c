@@ -83,9 +83,6 @@ void	other_operations(t_ftp_server *ftp_server)
 	  ftp_server->command = get_next_line(ftp_server->sd);
 	  if (ftp_server->command != NULL)
 	    launch_server_command(ftp_server, i);
-	  else
-	    dprintf(ftp_server->sd,
-		    "500 Syntax Error\r\n");
 	  free(ftp_server->command);
 	}
     }
