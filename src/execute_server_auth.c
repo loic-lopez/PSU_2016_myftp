@@ -49,6 +49,7 @@ void	execute_user_login(t_ftp_server *ftp_server,
 	      ftp_server->last_login[i] = cmd_actions[1][i];
 	      i++;
 	    }
+	  ftp_server->last_login[i] = 0;
 	}
     }
   else

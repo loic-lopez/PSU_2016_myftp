@@ -25,6 +25,7 @@ bool	check_if_destination_exists(t_ftp_server *ftp_server,
   i = 0;
   while (dest[i])
     complete_path[path++] = dest[i++];
+  complete_path[path] = 0;
   if (!(dir = opendir(complete_path)))
     return (false);
   closedir(dir);
@@ -68,6 +69,9 @@ void	execute_cwd(t_ftp_server *ftp_server,
       path = 0;
       while (cmd_actions[1][path])
 	ftp_server->client_path[current_client][i++] = cmd_actions[1][path++];
+      ftp_server->client_path[current_client][i] = '/';
+      i++;
+      ftp_server->client_path[current_client][i] = 0;
       dprintf(ftp_server->sd, "250 Directory successfully changed.\r\n");
     }
 }
@@ -80,12 +84,16 @@ void	execute_cdup(t_ftp_server *ftp_server,
   if (strcmp(ftp_server->client_path[current_client],
 	     ftp_server->server_path) != 0)
     {
-      i = strlen(ftp_server->client_path[current_client]);
-      while (ftp_server->client_path[current_client][i] != '/')
-	i--;
+      i = strlen(ftp_server->client_path[current_client]) - 1;
       memmove(&ftp_server->client_path[current_client][i],
-	      &ftp_server->client_path[current_client][i + i],
+	      &ftp_server->client_path[current_client][i + 1],
 	      strlen(ftp_server->client_path[current_client]) - i);
+      while (ftp_server->client_path[current_client][--i] != '/')
+	{
+	  memmove(&ftp_server->client_path[current_client][i],
+		  &ftp_server->client_path[current_client][i + 1],
+		  strlen(ftp_server->client_path[current_client]) - i);
+	}
     }
   dprintf(ftp_server->sd, "250 %s: Directory successfully changed.\r\n",
 	  cmd_actions[0]);

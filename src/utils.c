@@ -48,6 +48,11 @@ void	fill_user_root_directory(t_ftp_server *ftp_server, const char *src)
 {
   char *path;
 
+  if (!src)
+    {
+      fprintf(stderr, "The path can't be NULL");
+      exit(EXIT_FAILURE);
+    }
   if (strcmp(src, ".") == 0 || strcmp(src, "./") == 0)
     {
       path = get_current_dir_name();
