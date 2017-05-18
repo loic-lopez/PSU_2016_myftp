@@ -72,6 +72,7 @@ typedef	struct			s_ftp_server
   fd_set 			readfds;
   int 				port;
   char 				server_path[PATH_MAX];
+  char 				last_login[PATH_MAX];
 }				t_ftp_server;
 
 void	launch_server(int port, char const *home_user);
