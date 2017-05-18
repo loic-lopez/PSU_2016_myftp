@@ -35,3 +35,10 @@ void	execute_help(t_ftp_server *ftp_server,
     }
   dprintf(ftp_server->sd, "\r\n214 %s OK.\r\n", cmd_actions[0]);
 }
+
+void	execute_noop(t_ftp_server *ftp_server,
+			 int current_client, char **cmd_actions)
+{
+  dprintf(ftp_server->sd, "200 %s ok.\r\n", cmd_actions[0]);
+  (void)current_client;
+}

@@ -25,13 +25,13 @@ CFLAGS	+=	-Wall -Werror -Wextra
 CFLAGS	+=	-I./include/ -I./usr/include/linux
 
 SRC	=	src/main.c	\
+		src/str_to_wordtab.c \
+		src/get_next_line.c \
 		src/server.c	\
 		src/utils.c	\
 		src/utils_commands.c \
 		src/launch_server_command.c \
-		src/execute_server_command.c \
-		src/str_to_wordtab.c \
-		src/get_next_line.c \
+               	src/execute_server_command.c \
 		src/execute_server_auth_command.c \
 		src/execute_server_dir_command.c \
 		src/execute_server_util_command.c \
@@ -60,8 +60,8 @@ fclean	:	clean
 re	:	fclean all
 
 .c.o:
-		 @$(CC) $(CFLAGS) -c -o $@ $< && \
-		 $(ECHO) $(GREEN) "[OK]" $(TEAL) $< "--->" $@ $(DEFAULT) || \
-		 $(ECHO) $(RED) "[ERROR] doesn't exist" $(TEAL) $^ $(DEFAULT)
+	@$(CC) $(CFLAGS) -c -o $@ $< && \
+	$(ECHO) $(GREEN) "[OK]" $(TEAL) $< "--->" $@ $(DEFAULT) || \
+	$(ECHO) $(RED) "[ERROR] doesn't exist" $(TEAL) $^ $(DEFAULT)
 
 .PHONY	:	all clean fclean re
