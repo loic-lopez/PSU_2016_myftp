@@ -10,14 +10,6 @@
 
 #include "myftp.h"
 
-void	execute_delete(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
-{
-  dprintf(ftp_server->sd, "550 Failed to open file.\r\n");
-  (void)cmd_actions;
-  (void)ftp_server;
-  (void)current_client;
-}
-
 void	execute_pasv(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
   dprintf(ftp_server->sd, "227 Entering Passive Mode.\r\n");

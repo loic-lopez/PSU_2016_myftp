@@ -34,7 +34,8 @@ SRC	=	src/main.c	\
 		src/get_next_line.c \
 		src/execute_server_auth_command.c \
 		src/execute_server_dir_command.c \
-		src/execute_server_util_command.c
+		src/execute_server_util_command.c \
+		src/execute_server_file_command.c
 
 
 OBJS	=	$(SRC:.c=.o)
