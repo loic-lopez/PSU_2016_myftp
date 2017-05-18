@@ -47,7 +47,10 @@ void	execute_password(t_ftp_server *ftp_server,
 	  dprintf(ftp_server->sd, "230 User logged in, proceed.\r\n");
 	}
       else
-	dprintf(ftp_server->sd, "530 Login incorrect.\r\n");
+	{
+	  dprintf(ftp_server->sd, "530 Login incorrect.\r\n");
+	  ftp_server->client_command[current_client] = WAIT_LOGIN;
+	}
     }
   else
     dprintf(ftp_server->sd, "530 Please login with USER and PASS.\r\n");
