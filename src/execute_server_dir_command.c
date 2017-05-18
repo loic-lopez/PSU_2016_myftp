@@ -57,7 +57,8 @@ void	execute_cwd(t_ftp_server *ftp_server,
   if (strcmp(cmd_actions[1], "..") == 0)
     execute_cdup(ftp_server, current_client, cmd_actions);
   else if (cmd_actions[1] == NULL ||
-	  !check_if_destination_exists(ftp_server, cmd_actions[1], current_client))
+	  !check_if_destination_exists(ftp_server, cmd_actions[1],
+				       current_client))
     dprintf(ftp_server->sd, "550 Failed to change directory.\r\n");
   else
     {

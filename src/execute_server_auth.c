@@ -16,7 +16,7 @@ void	execute_user_login(t_ftp_server *ftp_server,
   if (strcmp(cmd_actions[0], "USER") == 0)
     {
       if (cmd_actions[1] == NULL)
-	dprintf(ftp_server->sd, "332 Need account for login.\r\n");
+	dprintf(ftp_server->sd, "331 Need account for login.\r\n");
       else if (strcmp(cmd_actions[1], "Anonymous") == 0)
 	  {
 	    ftp_server->client_command[current_client] = WAIT_PASSWORD;
