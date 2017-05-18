@@ -61,6 +61,6 @@ void	launch_server_command(t_ftp_server *ftp_server,
     }
   else
     dprintf(ftp_server->sd,
-	    "501 Syntax Error: %s\r\n", cmd_actions[0]);
+	    "500 Syntax Error: %s\r\n", cmd_actions[0]);
   free_2D_array(cmd_actions);
 }
