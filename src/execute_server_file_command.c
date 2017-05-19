@@ -19,7 +19,7 @@ void	execute_list(t_ftp_server *ftp_server,
 
   if (!(cmd = malloc(sizeof(char) * PATH_MAX)))
     return;
-  strcpy(cmd, ftp_server->server_path);
+  strcpy(cmd, ftp_server->client_path[current_client]);
   if (cmd_actions[1])
     strcat(cmd, cmd_actions[1]);
   if (!(dir = opendir(cmd)))
@@ -30,12 +30,11 @@ void	execute_list(t_ftp_server *ftp_server,
   else
     {
       strcpy(cmd, "/bin/ls -l ");
-      fp = get_file(ftp_server, cmd_actions, cmd);
+      fp = get_file(ftp_server, cmd_actions, cmd, current_client);
       pclose(fp);
       closedir(dir);
     }
   free(cmd);
-  (void)current_client;
 }
 
 void	execute_delete_and_parse_path(t_ftp_server *ftp_server,
@@ -82,7 +81,7 @@ void	execute_retr(t_ftp_server *ftp_server,
     dprintf(ftp_server->sd, "550 Failed to open file.\r\n");
   else
     {
-      strcpy(tmp_PATH, ftp_server->server_path);
+      strcpy(tmp_PATH, ftp_server->client_path[current_client]);
       strcat(tmp_PATH, cmd_actions[1]);
       if ((file = open(tmp_PATH, O_RDONLY)) == -1)
 	dprintf(ftp_server->sd, "550 %s\r\n", strerror(errno));
@@ -98,7 +97,6 @@ void	execute_retr(t_ftp_server *ftp_server,
 	}
       dprintf(ftp_server->sd, "226 File retrieve OK.\r\n");
     }
-  (void)current_client;
 }
 
 void	execute_stor(t_ftp_server *ftp_server,
@@ -108,10 +106,10 @@ void	execute_stor(t_ftp_server *ftp_server,
   int 	file;
   char 	tmp_PATH[PATH_MAX];
 
+  strcpy(tmp_PATH, ftp_server->client_path[current_client]);
+  strcat(tmp_PATH, cmd_actions[1]);
   if (!cmd_actions[1])
     return ((void)dprintf(ftp_server->sd, "550 No file given.\r\n"));
-  strcpy(tmp_PATH, ftp_server->server_path);
-  strcat(tmp_PATH, cmd_actions[1]);
   if ((file = open(tmp_PATH, O_CREAT | O_WRONLY | S_IRUSR | S_IWUSR)) == -1)
     dprintf(ftp_server->sd, "550 %s\r\n", strerror(errno));
   else
@@ -125,5 +123,4 @@ void	execute_stor(t_ftp_server *ftp_server,
       dprintf(ftp_server->sd, "226 file send OK.\r\n");
       close(file);
     }
-  (void)current_client;
 }

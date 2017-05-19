@@ -10,16 +10,17 @@
 
 #include "myftp.h"
 
-FILE	*get_file(t_ftp_server *ftp_server, char **cmd_actions, char *cmd)
+FILE	*get_file(t_ftp_server *ftp_server,
+		      char **cmd_actions, char *cmd, int current_client)
 {
   FILE	*fp;
   char 	path[PATH_MAX];
 
   if (cmd_actions[1] && cmd_actions[1][0] != '/')
-    fp = popen(strcat(strcat(cmd, ftp_server->server_path),
+    fp = popen(strcat(strcat(cmd, ftp_server->client_path[current_client]),
 		      cmd_actions[1]), "r");
   else
-    fp = popen(strcat(strcat(cmd, ftp_server->server_path),
+    fp = popen(strcat(strcat(cmd, ftp_server->client_path[current_client]),
 		      cmd_actions[1] ? cmd_actions[1]: ""), "r");
   dprintf(ftp_server->sd, "150 Here comes the directory listing.\r\n");
   while (fgets(path, sizeof(path) - 1, fp) != NULL)
