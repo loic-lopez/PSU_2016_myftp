@@ -117,5 +117,9 @@ void	execute_list(t_ftp_server *ftp_server,
 			 int current_client, char **cmd_actions);
 void	execute_retr(t_ftp_server *ftp_server,
 			 int current_client, char **cmd_actions);
+void	execute_pasv(t_ftp_server *ftp_server,
+			 int current_client, char **cmd_actions);
+void	execute_port(t_ftp_server *ftp_server,
+			 int current_client, char **cmd_actions);
 
 #endif /* PSU_2016_MYFTP_MYFTP_H */

@@ -10,22 +10,6 @@
 
 #include "myftp.h"
 
-void	execute_pasv(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
-{
-  dprintf(ftp_server->sd, "227 Entering Passive Mode.\r\n");
-  (void)cmd_actions;
-  (void)ftp_server;
-  (void)current_client;
-}
-
-void	execute_port(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
-{
-  dprintf(ftp_server->sd, "200 PORT command successful.\r\n");
-  (void)cmd_actions;
-  (void)ftp_server;
-  (void)current_client;
-}
-
 void	execute_stor(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
   dprintf(ftp_server->sd, "150 Starting file upload.\r\n");
