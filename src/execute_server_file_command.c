@@ -10,24 +10,6 @@
 
 #include "myftp.h"
 
-FILE	*get_file(t_ftp_server *ftp_server, char **cmd_actions, char *cmd)
-{
-  FILE	*fp;
-  char 	path[PATH_MAX];
-
-  if (cmd_actions[1] && cmd_actions[1][0] != '/')
-    fp = popen(strcat(strcat(cmd, ftp_server->server_path),
-		      cmd_actions[1]), "r");
-  else
-    fp = popen(strcat(strcat(cmd, ftp_server->server_path),
-		      cmd_actions[1] ? cmd_actions[1]: ""), "r");
-  dprintf(ftp_server->sd, "150 Here comes the directory listing.\r\n");
-  while (fgets(path, sizeof(path) - 1, fp) != NULL)
-    dprintf(ftp_server->sd, "%s\r\n", path);
-  dprintf(ftp_server->sd, "226 Directory send OK.\r\n");
-  return (fp);
-}
-
 void	execute_list(t_ftp_server *ftp_server,
 			 int current_client, char **cmd_actions)
 {
@@ -114,6 +96,36 @@ void	execute_retr(t_ftp_server *ftp_server,
 	  close(file);
 	}
       dprintf(ftp_server->sd, "226 File retrieve OK.\r\n");
+    }
+  (void)current_client;
+}
+
+void	execute_stor(t_ftp_server *ftp_server,
+			 int current_client, char **cmd_actions)
+{
+  char *line;
+  int 	file;
+  char 	tmp_PATH[PATH_MAX];
+
+  if (!cmd_actions[1])
+    dprintf(ftp_server->sd, "550 No file given.\r\n");
+  else
+    {
+      strcpy(tmp_PATH, ftp_server->server_path);
+      strcat(tmp_PATH, cmd_actions[1]);
+      if ((file = open(tmp_PATH, O_CREAT | O_WRONLY)) == -1)
+	dprintf(ftp_server->sd, "550 %s\r\n", strerror(errno));
+      else
+	{
+	  dprintf(ftp_server->sd, "150 Starting file upload.\r\n");
+	  while ((line = get_next_line(file)))
+	    {
+	      dprintf(file, line);
+	      free(line);
+	    }
+	  dprintf(ftp_server->sd, "226 file send OK.\r\n");
+	  close(file);
+	}
     }
   (void)current_client;
 }

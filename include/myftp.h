@@ -121,5 +121,8 @@ void	execute_pasv(t_ftp_server *ftp_server,
 			 int current_client, char **cmd_actions);
 void	execute_port(t_ftp_server *ftp_server,
 			 int current_client, char **cmd_actions);
+void	execute_stor(t_ftp_server *ftp_server,
+			 int current_client, char **cmd_actions);
+FILE	*get_file(t_ftp_server *ftp_server, char **cmd_actions, char *cmd);
 
 #endif /* PSU_2016_MYFTP_MYFTP_H */
