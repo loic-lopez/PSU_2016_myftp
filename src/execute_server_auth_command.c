@@ -10,7 +10,6 @@
 
 #include "myftp.h"
 
-
 void	execute_quit(t_ftp_server *ftp_server,
 			 int current_client, char **cmd_actions)
 {

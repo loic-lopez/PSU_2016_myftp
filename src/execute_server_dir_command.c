@@ -20,8 +20,12 @@ bool	check_if_destination_exists(t_ftp_server *ftp_server,
 
   i = 0;
   path = 0;
-  while (ftp_server->client_path[current_client][i])
-    complete_path[path++] = ftp_server->client_path[current_client][i++];
+  if (dest[0] == '/')
+    while (ftp_server->server_path[i])
+      complete_path[path++] = ftp_server->server_path[i++];
+  else
+    while (ftp_server->client_path[current_client][i])
+    	complete_path[path++] = ftp_server->client_path[current_client][i++];
   i = 0;
   while (dest[i])
     complete_path[path++] = dest[i++];
@@ -65,14 +69,13 @@ void	execute_cwd(t_ftp_server *ftp_server,
     dprintf(ftp_server->sd, "550 Failed to change directory.\r\n");
   else
     {
-      i = strlen(ftp_server->client_path[current_client]);
-      cmd_actions[1][0] == '/' ? (path = 1) : (path = 0);
+      path = 0;
+      cmd_actions[1][0] == '/' ? (path++, i = strlen(ftp_server->server_path)):
+	(i = strlen(ftp_server->client_path[current_client]));
       while (cmd_actions[1][path])
 	ftp_server->client_path[current_client][i++] = cmd_actions[1][path++];
-      if (ftp_server->client_path[current_client][i - 1] != '/'
-	  && ftp_server->client_path[current_client][i] != '/')
-	ftp_server->client_path[current_client][i] = '/';
-      i++;
+      if (ftp_server->client_path[current_client][i - 1] != '/')
+	ftp_server->client_path[current_client][i++] = '/';
       ftp_server->client_path[current_client][i] = 0;
       fprintf(stderr, &cmd_actions[1][path]);
       dprintf(ftp_server->sd, "250 Directory successfully changed.\r\n");

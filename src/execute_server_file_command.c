@@ -65,7 +65,8 @@ void	execute_delete(t_ftp_server *ftp_server,
 			   int current_client, char **cmd_actions)
 {
   if (cmd_actions[1][0] == '/')
-    execute_delete_and_parse_path(ftp_server, current_client, &cmd_actions[1][1]);
+    execute_delete_and_parse_path(ftp_server, current_client,
+				  &cmd_actions[1][1]);
   else
     execute_delete_and_parse_path(ftp_server, current_client, cmd_actions[1]);
 }
@@ -108,24 +109,21 @@ void	execute_stor(t_ftp_server *ftp_server,
   char 	tmp_PATH[PATH_MAX];
 
   if (!cmd_actions[1])
-    dprintf(ftp_server->sd, "550 No file given.\r\n");
+    return ((void)dprintf(ftp_server->sd, "550 No file given.\r\n"));
+  strcpy(tmp_PATH, ftp_server->server_path);
+  strcat(tmp_PATH, cmd_actions[1]);
+  if ((file = open(tmp_PATH, O_CREAT | O_WRONLY | S_IRUSR | S_IWUSR)) == -1)
+    dprintf(ftp_server->sd, "550 %s\r\n", strerror(errno));
   else
     {
-      strcpy(tmp_PATH, ftp_server->server_path);
-      strcat(tmp_PATH, cmd_actions[1]);
-      if ((file = open(tmp_PATH, O_CREAT | O_WRONLY)) == -1)
-	dprintf(ftp_server->sd, "550 %s\r\n", strerror(errno));
-      else
+      dprintf(ftp_server->sd, "150 Starting file upload.\r\n");
+      while ((line = get_next_line(file)))
 	{
-	  dprintf(ftp_server->sd, "150 Starting file upload.\r\n");
-	  while ((line = get_next_line(file)))
-	    {
-	      dprintf(file, line);
-	      free(line);
-	    }
-	  dprintf(ftp_server->sd, "226 file send OK.\r\n");
-	  close(file);
+	  dprintf(file, line);
+	  free(line);
 	}
+      dprintf(ftp_server->sd, "226 file send OK.\r\n");
+      close(file);
     }
   (void)current_client;
 }
