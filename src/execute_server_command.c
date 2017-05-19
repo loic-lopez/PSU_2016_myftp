@@ -42,14 +42,6 @@ void	execute_stor(t_ftp_server *ftp_server, int current_client, char **cmd_actio
   (void)ftp_server;
   (void)current_client;
 }
-void	execute_list(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
-{
-  dprintf(ftp_server->sd, "150 Here comes the directory listing.\r\n");
-  dprintf(ftp_server->sd, "226 Directory send OK.\r\n");
-  (void)cmd_actions;
-  (void)ftp_server;
-  (void)current_client;
-}
 
 void	execute_server_command(t_ftp_server *ftp_server,
 			       char **cmd_actions, int current_client)

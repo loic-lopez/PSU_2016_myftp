@@ -112,5 +112,7 @@ void	execute_delete(t_ftp_server *ftp_server,
 			   int current_client, char **cmd_actions);
 void	execute_noop(t_ftp_server *ftp_server,
 			 int current_client, char **cmd_actions);
+void	execute_list(t_ftp_server *ftp_server,
+			 int current_client, char **cmd_actions);
 
 #endif /* PSU_2016_MYFTP_MYFTP_H */
