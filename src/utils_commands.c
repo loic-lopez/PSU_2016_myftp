@@ -24,7 +24,7 @@ FILE	*get_file(t_ftp_server *ftp_server,
 		      cmd_actions[1] ? cmd_actions[1]: ""), "r");
   dprintf(ftp_server->sd, "150 Here comes the directory listing.\r\n");
   while (fgets(path, sizeof(path) - 1, fp) != NULL)
-    dprintf(ftp_server->sd, "%s\r\n", path);
+    dprintf(ftp_server->sd, "%s", path);
   dprintf(ftp_server->sd, "226 Directory send OK.\r\n");
   return (fp);
 }
