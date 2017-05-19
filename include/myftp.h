@@ -25,6 +25,7 @@
 #include <stdbool.h>
 #include <limits.h>
 #include <dirent.h>
+#include <fcntl.h>
 #include "get_next_line.h"
 
 #ifndef PATH_MAX
@@ -113,6 +114,8 @@ void	execute_delete(t_ftp_server *ftp_server,
 void	execute_noop(t_ftp_server *ftp_server,
 			 int current_client, char **cmd_actions);
 void	execute_list(t_ftp_server *ftp_server,
+			 int current_client, char **cmd_actions);
+void	execute_retr(t_ftp_server *ftp_server,
 			 int current_client, char **cmd_actions);
 
 #endif /* PSU_2016_MYFTP_MYFTP_H */

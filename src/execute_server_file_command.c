@@ -13,6 +13,7 @@
 FILE	*get_file(t_ftp_server *ftp_server, char **cmd_actions, char *cmd)
 {
   FILE	*fp;
+  char 	path[PATH_MAX];
 
   if (cmd_actions[1] && cmd_actions[1][0] != '/')
     fp = popen(strcat(strcat(cmd, ftp_server->server_path),
@@ -20,6 +21,10 @@ FILE	*get_file(t_ftp_server *ftp_server, char **cmd_actions, char *cmd)
   else
     fp = popen(strcat(strcat(cmd, ftp_server->server_path),
 		      cmd_actions[1] ? cmd_actions[1]: ""), "r");
+  dprintf(ftp_server->sd, "150 Here comes the directory listing.\r\n");
+  while (fgets(path, sizeof(path) - 1, fp) != NULL)
+    dprintf(ftp_server->sd, "%s\r\n", path);
+  dprintf(ftp_server->sd, "226 Directory send OK.\r\n");
   return (fp);
 }
 
@@ -28,7 +33,6 @@ void	execute_list(t_ftp_server *ftp_server,
 {
   FILE 	*fp;
   DIR	*dir;
-  char 	path[PATH_MAX];
   char 	*cmd;
 
   if (!(cmd = malloc(sizeof(char) * PATH_MAX)))
@@ -37,15 +41,14 @@ void	execute_list(t_ftp_server *ftp_server,
   if (cmd_actions[1])
     strcat(cmd, cmd_actions[1]);
   if (!(dir = opendir(cmd)))
-    dprintf(ftp_server->sd, "451 directory not found\r\n");
+    {
+      dprintf(ftp_server->sd, "150 Here comes the directory listing.\r\n");
+      dprintf(ftp_server->sd, "226 Directory send OK.\r\n");
+    }
   else
     {
       strcpy(cmd, "/bin/ls -l ");
       fp = get_file(ftp_server, cmd_actions, cmd);
-      dprintf(ftp_server->sd, "150 Here comes the directory listing.\r\n");
-      while (fgets(path, sizeof(path) - 1, fp) != NULL)
-	dprintf(ftp_server->sd, "%s\r\n", path);
-      dprintf(ftp_server->sd, "226 Directory send OK.\r\n");
       pclose(fp);
       closedir(dir);
     }
@@ -83,4 +86,34 @@ void	execute_delete(t_ftp_server *ftp_server,
     execute_delete_and_parse_path(ftp_server, current_client, &cmd_actions[1][1]);
   else
     execute_delete_and_parse_path(ftp_server, current_client, cmd_actions[1]);
+}
+
+void	execute_retr(t_ftp_server *ftp_server,
+			 int current_client, char **cmd_actions)
+{
+  char *line;
+  int 	file;
+  char 	tmp_PATH[PATH_MAX];
+
+  if (!cmd_actions[1])
+    dprintf(ftp_server->sd, "550 Failed to open file.\r\n");
+  else
+    {
+      strcpy(tmp_PATH, ftp_server->server_path);
+      strcat(tmp_PATH, cmd_actions[1]);
+      if ((file = open(tmp_PATH, O_RDONLY)) == -1)
+	dprintf(ftp_server->sd, "550 %s\r\n", strerror(errno));
+      else
+	{
+	  dprintf(ftp_server->sd, "150 Starting file download.\r\n");
+	  while ((line = get_next_line(file)))
+	    {
+	      dprintf(ftp_server->sd, "%s\r\n", line);
+	      free(line);
+	    }
+	  close(file);
+	}
+      dprintf(ftp_server->sd, "226 File retrieve OK.\r\n");
+    }
+  (void)current_client;
 }

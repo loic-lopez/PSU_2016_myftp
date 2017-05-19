@@ -26,14 +26,6 @@ void	execute_port(t_ftp_server *ftp_server, int current_client, char **cmd_actio
   (void)current_client;
 }
 
-void	execute_retr(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
-{
-  dprintf(ftp_server->sd, "150 Starting file download.\r\n");
-  dprintf(ftp_server->sd, "226 File retrieve OK.\r\n");
-  (void)cmd_actions;
-  (void)ftp_server;
-  (void)current_client;
-}
 void	execute_stor(t_ftp_server *ftp_server, int current_client, char **cmd_actions)
 {
   dprintf(ftp_server->sd, "150 Starting file upload.\r\n");
